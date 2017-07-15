@@ -1,2 +1,2 @@
 
-Copyright (C) 2017 ashkan-rmk
+Copyright (C) 2017 ashkan-rmk and SamaneYaghoobi
