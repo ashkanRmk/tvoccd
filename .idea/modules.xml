@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/NDlibrary-2.9.8/NDlibrary-2.9.8.iml" filepath="$PROJECT_DIR$/NDlibrary-2.9.8/NDlibrary-2.9.8.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Rafea4.iml" filepath="$PROJECT_DIR$/Rafea4.iml" />
+      <module fileurl="file://$PROJECT_DIR$/actionbar-rtlizer-2.1.0/actionbar-rtlizer-2.1.0.iml" filepath="$PROJECT_DIR$/actionbar-rtlizer-2.1.0/actionbar-rtlizer-2.1.0.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/materialdrawer-5.9.4/materialdrawer-5.9.4.iml" filepath="$PROJECT_DIR$/materialdrawer-5.9.4/materialdrawer-5.9.4.iml" />
+      <module fileurl="file://$PROJECT_DIR$/materialdrawer-5.9.4/materialdrawer-5.9.4.iml" filepath="$PROJECT_DIR$/materialdrawer-5.9.4/materialdrawer-5.9.4.iml" />
+    </modules>
+  </component>
+</project>
