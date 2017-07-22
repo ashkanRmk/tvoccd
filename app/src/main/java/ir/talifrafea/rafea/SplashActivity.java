@@ -6,6 +6,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 public class SplashActivity extends AppCompatActivity {
@@ -23,7 +25,16 @@ public class SplashActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
-        img_splash = (ImageView) findViewById(R.id.img_splash);
+
+        ImageView myTextView= (ImageView)findViewById(R.id.text);
+        Animation bottom_up = AnimationUtils.loadAnimation(this,R.anim.bottomup);
+        myTextView.startAnimation(bottom_up);
+
+
+        ImageView myImageView= (ImageView)findViewById(R.id.logo);
+        Animation myFadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fadein);
+        myImageView.startAnimation(myFadeInAnimation);
+
 
         Handler handler = new Handler();
         Runnable runnable = new Runnable() {
@@ -35,7 +46,7 @@ public class SplashActivity extends AppCompatActivity {
             }
         };
 
-        handler.postDelayed(runnable, 3000);
+        handler.postDelayed(runnable, 4000);
 
     }
 }
