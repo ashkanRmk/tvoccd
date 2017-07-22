@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
         //Disable animate of Navigation bottom
         BottomNavigationViewHelper.disableShiftMode(navigation);
 
-        changeFragment(5);
+        changeFragment(1);
 
     }
 
