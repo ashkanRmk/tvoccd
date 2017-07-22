@@ -1,25 +1,35 @@
 package ir.talifrafea.rafea;
 
+import android.content.Context;
+import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import ir.talifrafea.rafea.Fragments.Doros_frag;
+import ir.talifrafea.rafea.Fragments.Honar_frag;
+import ir.talifrafea.rafea.Fragments.Keshavarzi_frag;
+import ir.talifrafea.rafea.Fragments.Khadamat_frag;
+import ir.talifrafea.rafea.Fragments.Sanat_frag;
+import ir.talifrafea.rafea.Misc.ActionBarRtlizer;
+import ir.talifrafea.rafea.Misc.BottomNavigationViewHelper;
+import ir.talifrafea.rafea.Misc.RtlizeEverything;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView mTextMessage;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -27,31 +37,44 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.doros:
-                    mTextMessage.setText("دروس مشترک فنی و حرفه‌ای");
                     changeFragment(1);
                     return true;
                 case R.id.honar:
-                    mTextMessage.setText("زمینه هنر");
+                    changeFragment(2);
                     return true;
                 case R.id.keshavarzi:
-                    mTextMessage.setText("زمینه کشاورزی");
+                    changeFragment(3);
                     return true;
                 case R.id.khadamat:
-                    mTextMessage.setText("زمینه خدمات");
+                    changeFragment(4);
                     return true;
                 case R.id.sanat:
-                    mTextMessage.setText("زمینه صنعت");
+                    changeFragment(5);
                     return true;
             }
             return false;
         }
     };
 
+    //Change Default Font
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Change Default Font
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("BYekan.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build()
+        );
+
 
         //Set Manually Title of Action Bar
         getSupportActionBar().setTitle("معرفی رشته‌های شاخه فنی‌حرفه‌ای");
@@ -67,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
         RtlizeEverything.rtlize(actionBarView);
         RtlizeEverything.rtlize(homeView);
 
-        mTextMessage = (TextView) findViewById(R.id.message);
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -87,6 +109,8 @@ public class MainActivity extends AppCompatActivity {
 
         //Disable animate of Navigation bottom
         BottomNavigationViewHelper.disableShiftMode(navigation);
+
+        changeFragment(1);
 
     }
 
@@ -115,19 +139,28 @@ public class MainActivity extends AppCompatActivity {
         Fragment newFragment = null;
 
         if (position == 1) {
-            newFragment = new Doros_frag();
+             newFragment = new Doros_frag();
         } else if (position == 2) {
-            newFragment = new Honar_frag();
+             newFragment = new Honar_frag();
         } else if (position == 3) {
-            newFragment = new Sanat_frag();
-        }else if (position == 4) {
             newFragment = new Keshavarzi_frag();
-        }else if (position == 5) {
+        }else if (position == 4) {
             newFragment = new Khadamat_frag();
+        }else if (position == 5) {
+            newFragment = new Sanat_frag();
         }
 
-        FragmentManager manager = getSupportFragmentManager();
-        manager.beginTransaction().replace(R.id.fragmentContainer, newFragment).commit();
+
+        // Create new fragment and transaction
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        // Replace whatever is in the fragment_container view with this fragment,
+        // and add the transaction to the back stack if needed
+        transaction.replace(R.id.fragmentContainer, newFragment,  "NewFragmentTag");
+//        transaction.addToBackStack(null);
+
+        // Commit the transaction
+        transaction.commit();
     }
 
 

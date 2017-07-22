@@ -2,13 +2,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="ir.talifrafea.rafea.Fragments.Doros_frag">
+    tools:context="ir.talifrafea.rafea.Fragments.Honar.Honar_Honar">
 
-    <android.support.v7.widget.RecyclerView
+    <ExpandableListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/cardList">
-    </android.support.v7.widget.RecyclerView>
+        android:id="@+id/lvExp">
+    </ExpandableListView>
 
 </LinearLayout>

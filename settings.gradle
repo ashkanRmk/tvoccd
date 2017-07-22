@@ -1,1 +1,1 @@
-include ':app', ':materialdrawer-5.9.4', ':NDlibrary-2.9.8', ':actionbar-rtlizer-2.1.0'
+include ':app', ':materialdrawer-5.9.4', ':NDlibrary-2.9.8', ':actionbar-rtlizer-2.1.0', ':library-1.6.1', ':utils-v4-1.6.1', ':utils-v13-1.6.1', ':calligraphy-2.2.0'

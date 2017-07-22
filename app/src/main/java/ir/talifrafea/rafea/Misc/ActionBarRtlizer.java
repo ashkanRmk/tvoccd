@@ -1,4 +1,4 @@
-package ir.talifrafea.rafea;
+package ir.talifrafea.rafea.Misc;
 
 
 import android.annotation.TargetApi;
@@ -10,6 +10,8 @@ import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+
+import ir.talifrafea.rafea.R;
 
 /**
  * Created by semsamot on 8/2/2014.

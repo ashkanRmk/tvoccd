@@ -6,8 +6,11 @@
       <module fileurl="file://$PROJECT_DIR$/Rafea4.iml" filepath="$PROJECT_DIR$/Rafea4.iml" />
       <module fileurl="file://$PROJECT_DIR$/actionbar-rtlizer-2.1.0/actionbar-rtlizer-2.1.0.iml" filepath="$PROJECT_DIR$/actionbar-rtlizer-2.1.0/actionbar-rtlizer-2.1.0.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/calligraphy-2.2.0/calligraphy-2.2.0.iml" filepath="$PROJECT_DIR$/calligraphy-2.2.0/calligraphy-2.2.0.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library-1.6.1/library-1.6.1.iml" filepath="$PROJECT_DIR$/library-1.6.1/library-1.6.1.iml" />
       <module fileurl="file://$PROJECT_DIR$/materialdrawer-5.9.4/materialdrawer-5.9.4.iml" filepath="$PROJECT_DIR$/materialdrawer-5.9.4/materialdrawer-5.9.4.iml" />
-      <module fileurl="file://$PROJECT_DIR$/materialdrawer-5.9.4/materialdrawer-5.9.4.iml" filepath="$PROJECT_DIR$/materialdrawer-5.9.4/materialdrawer-5.9.4.iml" />
+      <module fileurl="file://$PROJECT_DIR$/utils-v13-1.6.1/utils-v13-1.6.1.iml" filepath="$PROJECT_DIR$/utils-v13-1.6.1/utils-v13-1.6.1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/utils-v4-1.6.1/utils-v4-1.6.1.iml" filepath="$PROJECT_DIR$/utils-v4-1.6.1/utils-v4-1.6.1.iml" />
     </modules>
   </component>
 </project>

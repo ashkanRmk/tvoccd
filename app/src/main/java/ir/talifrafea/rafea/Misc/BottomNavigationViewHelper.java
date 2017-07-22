@@ -1,4 +1,4 @@
-package ir.talifrafea.rafea;
+package ir.talifrafea.rafea.Misc;
 
 /**
  * Created by smn on 7/13/17.

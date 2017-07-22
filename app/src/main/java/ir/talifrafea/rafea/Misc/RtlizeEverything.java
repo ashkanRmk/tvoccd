@@ -1,4 +1,4 @@
-package ir.talifrafea.rafea;
+package ir.talifrafea.rafea.Misc;
 
 
 import android.annotation.TargetApi;
