@@ -5,10 +5,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +19,9 @@ import java.util.List;
 
 import ir.talifrafea.rafea.Misc.ExpandableListAdapter;
 import ir.talifrafea.rafea.R;
+
+import static android.content.ContentValues.TAG;
+
 public class Barq_Sanat extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -76,6 +82,42 @@ public class Barq_Sanat extends Fragment {
 
         // setting list adapter
         expListView.setAdapter(listAdapter);
+
+
+        // Listview on child click listener
+        expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v,
+                                        int groupPosition, int childPosition, long id) {
+                Toast.makeText(
+                        v.getContext(),
+                        listDataHeader.get(groupPosition)
+                                + " : "
+                                + listDataChild.get(
+                                listDataHeader.get(groupPosition)).get(
+                                childPosition), Toast.LENGTH_SHORT)
+                        .show();
+
+                //Some works for NarmAfzar Films
+                if (groupPosition == 3 && childPosition == 4)
+                {
+                    Log.d(TAG, "onChildClick: aval if");
+                    Fragment newFragment = new Narm_Films();
+
+                    FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+
+                    transaction.replace(R.id.fragmentContainer, newFragment,  "NewFragmentTag");
+                    transaction.addToBackStack(null);
+
+                    transaction.commit();
+                    Log.d(TAG, "onChildClick: akhare if");
+                    return true;
+                }
+
+                return false;
+            }
+        });
     }
 
 
