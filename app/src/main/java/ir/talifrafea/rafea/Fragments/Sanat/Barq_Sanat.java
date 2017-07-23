@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import ir.talifrafea.rafea.MainActivity;
 import ir.talifrafea.rafea.Misc.ExpandableListAdapter;
 import ir.talifrafea.rafea.R;
 
@@ -100,18 +101,11 @@ public class Barq_Sanat extends Fragment {
                         .show();
 
                 //Some works for NarmAfzar Films
+                MainActivity activity = (MainActivity) getActivity();
+
                 if (groupPosition == 3 && childPosition == 4)
                 {
-                    Log.d(TAG, "onChildClick: aval if");
-                    Fragment newFragment = new Narm_Films();
-
-                    FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-
-                    transaction.replace(R.id.fragmentContainer, newFragment,  "NewFragmentTag");
-                    transaction.addToBackStack(null);
-
-                    transaction.commit();
-                    Log.d(TAG, "onChildClick: akhare if");
+                    activity.getFilmFragment();
                     return true;
                 }
 
