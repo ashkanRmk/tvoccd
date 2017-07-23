@@ -10,6 +10,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,12 +21,15 @@ import ir.talifrafea.rafea.Fragments.Doros_frag;
 import ir.talifrafea.rafea.Fragments.Honar_frag;
 import ir.talifrafea.rafea.Fragments.Keshavarzi_frag;
 import ir.talifrafea.rafea.Fragments.Khadamat_frag;
+import ir.talifrafea.rafea.Fragments.Sanat.Narm_Films;
 import ir.talifrafea.rafea.Fragments.Sanat_frag;
 import ir.talifrafea.rafea.Misc.ActionBarRtlizer;
 import ir.talifrafea.rafea.Misc.BottomNavigationViewHelper;
 import ir.talifrafea.rafea.Misc.RtlizeEverything;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
+import static java.security.AccessController.getContext;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -163,7 +167,17 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
     }
 
+    public void getFilmFragment()
+    {
+        Fragment newFragment = new Narm_Films();
 
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        transaction.replace(R.id.fragmentContainer, newFragment,  "NewFragmentTag");
+        transaction.addToBackStack(null);
+
+        transaction.commit();
+    }
 
 
 }
