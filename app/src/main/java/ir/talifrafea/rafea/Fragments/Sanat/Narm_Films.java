@@ -1,13 +1,28 @@
 package ir.talifrafea.rafea.Fragments.Sanat;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import ir.talifrafea.rafea.Misc.Adapter_Films;
+import ir.talifrafea.rafea.Misc.List_Adapter;
 import ir.talifrafea.rafea.R;
 public class Narm_Films extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -46,6 +61,93 @@ public class Narm_Films extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_narm__films, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("فیلم‌های رشته رایانه");
+
+        final RecyclerView recList = (RecyclerView) view.findViewById(R.id.cardList);
+        recList.setHasFixedSize(true);
+        LinearLayoutManager llm = new GridLayoutManager(view.getContext(), 2);
+
+        recList.setLayoutManager(llm);
+
+        recList.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
+        recList.setItemAnimator(new DefaultItemAnimator());
+
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int position = recList.getChildLayoutPosition(view);
+
+                Toast.makeText(view.getContext(), "you click on "+ (position + 1) + " item!", Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        List<String> list = getListData();
+        Adapter_Films adapter = new Adapter_Films(R.layout.item_films, list, onClickListener);
+        recList.setAdapter(adapter);
+
+
+    }
+
+    public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
+
+        private int spanCount;
+        private int spacing;
+        private boolean includeEdge;
+
+        public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
+            this.spanCount = spanCount;
+            this.spacing = spacing;
+            this.includeEdge = includeEdge;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            int position = parent.getChildAdapterPosition(view); // item position
+            int column = position % spanCount; // item column
+
+            if (includeEdge) {
+                outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
+                outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
+
+                if (position < spanCount) { // top edge
+                    outRect.top = spacing;
+                }
+                outRect.bottom = spacing; // item bottom
+            } else {
+                outRect.left = column * spacing / spanCount; // column * ((1f / spanCount) * spacing)
+                outRect.right = spacing - (column + 1) * spacing / spanCount; // spacing - (column + 1) * ((1f /    spanCount) * spacing)
+                if (position >= spanCount) {
+                    outRect.top = spacing; // item top
+                }
+            }
+        }
+    }
+
+    private int dpToPx(int dp) {
+        Resources r = getResources();
+        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
+    }
+
+
+    private List<String> getListData() {
+        List<String> list = new LinkedList<>();
+        list.add("فیلم 1");
+        list.add("فیلم 2");
+        list.add("فیلم 3");
+        list.add("فیلم 4");
+        list.add("فیلم 5");
+        list.add("فیلم 6");
+        list.add("فیلم 7");
+        list.add("فیلم 8");
+        list.add("فیلم 9");
+        list.add("فیلم 10");
+        return list;
     }
 
 
