@@ -18,11 +18,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
+
 import java.util.LinkedList;
 import java.util.List;
 
+import ir.talifrafea.rafea.MainActivity;
 import ir.talifrafea.rafea.Misc.Adapter_Films;
 import ir.talifrafea.rafea.Misc.List_Adapter;
+import ir.talifrafea.rafea.Models.Item_Model;
 import ir.talifrafea.rafea.R;
 public class Narm_Films extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -81,9 +85,40 @@ public class Narm_Films extends Fragment {
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int position = recList.getChildLayoutPosition(view);
+                final int position = recList.getChildLayoutPosition(view);
+                final MainActivity activity = (MainActivity) getActivity();
 
-                Toast.makeText(view.getContext(), "you click on "+ (position + 1) + " item!", Toast.LENGTH_SHORT).show();
+                String name = activity.BarqParents.get(3).getMyChilds().get(4).getMyItems().get(position).getTitle();
+                final NiftyDialogBuilder dialogBuilder = NiftyDialogBuilder.getInstance(view.getContext());
+
+                dialogBuilder
+                        .withTitle("آیا مطمئن هستید؟")
+                        .withMessage("دانلود فایل " + name)
+                        .withButton1Text("شروع دانلود")
+                        .withButton2Text("لغو")
+                        .withMessageColor("#FFFFFFFF")
+                        .withDialogColor("#FF459969")
+                        .isCancelableOnTouchOutside(true)
+                        .setButton1Click(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Toast.makeText(v.getContext(), "دانلود فایل آغاز شد!", Toast.LENGTH_SHORT).show();
+                                String url = activity.BarqParents.get(3).getMyChilds().get(4).getMyItems().get(position).getUrl();
+
+                                Toast.makeText(v.getContext(), url, Toast.LENGTH_SHORT).show();
+
+                                dialogBuilder.dismiss();
+                            }
+                        })
+                        .setButton2Click(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Toast.makeText(v.getContext(), "عملیات لغو شد!", Toast.LENGTH_SHORT).show();
+                                dialogBuilder.dismiss();
+                            }
+                        })
+                        .show();
+
             }
         };
 
@@ -137,16 +172,13 @@ public class Narm_Films extends Fragment {
 
     private List<String> getListData() {
         List<String> list = new LinkedList<>();
-        list.add("فیلم 1");
-        list.add("فیلم 2");
-        list.add("فیلم 3");
-        list.add("فیلم 4");
-        list.add("فیلم 5");
-        list.add("فیلم 6");
-        list.add("فیلم 7");
-        list.add("فیلم 8");
-        list.add("فیلم 9");
-        list.add("فیلم 10");
+        final MainActivity activity = (MainActivity) getActivity();
+        List<Item_Model> item_model = activity.BarqParents.get(3).getMyChilds().get(4).getMyItems();
+
+        for (Item_Model itemModel : item_model) {
+            list.add(itemModel.getTitle());
+        }
+
         return list;
     }
 

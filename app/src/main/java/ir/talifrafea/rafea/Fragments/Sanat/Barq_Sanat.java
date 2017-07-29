@@ -1,27 +1,31 @@
 package ir.talifrafea.rafea.Fragments.Sanat;
 
-import android.content.Context;
-import android.net.Uri;
+import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
+import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
+import com.koushikdutta.ion.Ion;
+import com.koushikdutta.ion.ProgressCallback;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import ir.talifrafea.rafea.MainActivity;
 import ir.talifrafea.rafea.Misc.ExpandableListAdapter;
+import ir.talifrafea.rafea.Models.Child_Model;
+import ir.talifrafea.rafea.Models.Item_Model;
+import ir.talifrafea.rafea.Models.Parent_Model;
 import ir.talifrafea.rafea.R;
-
-import static android.content.ContentValues.TAG;
 
 public class Barq_Sanat extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -72,7 +76,6 @@ public class Barq_Sanat extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
         // get the listview
         expListView = (ExpandableListView) view.findViewById(R.id.lvExp);
 
@@ -84,31 +87,78 @@ public class Barq_Sanat extends Fragment {
         // setting list adapter
         expListView.setAdapter(listAdapter);
 
-
         // Listview on child click listener
         expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
 
             @Override
             public boolean onChildClick(ExpandableListView parent, View v,
-                                        int groupPosition, int childPosition, long id) {
-                Toast.makeText(
-                        v.getContext(),
-                        listDataHeader.get(groupPosition)
-                                + " : "
-                                + listDataChild.get(
-                                listDataHeader.get(groupPosition)).get(
-                                childPosition), Toast.LENGTH_SHORT)
-                        .show();
-
+                                        final int groupPosition, final int childPosition, long id) {
                 //Some works for NarmAfzar Films
-                MainActivity activity = (MainActivity) getActivity();
+                final MainActivity activity = (MainActivity) getActivity();
 
                 if (groupPosition == 3 && childPosition == 4)
                 {
                     activity.getFilmFragment();
                     return true;
                 }
+                else {
+                    final NiftyDialogBuilder dialogBuilder = NiftyDialogBuilder.getInstance(v.getContext());
 
+                    dialogBuilder
+                            .withTitle("آیا مطمئن هستید؟")
+                            .withMessage("دانلود فایل " + listDataChild.get(
+                                    listDataHeader.get(groupPosition)).get(
+                                    childPosition) + " از " + listDataHeader.get(groupPosition))
+                            .withButton1Text("شروع دانلود")
+                            .withButton2Text("لغو")
+                            .withMessageColor("#FFFFFFFF")
+                            .withDialogColor("#FF459969")
+                            .isCancelableOnTouchOutside(true)
+                            .setButton1Click(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Toast.makeText(v.getContext(), "دانلود فایل آغاز شد!", Toast.LENGTH_SHORT).show();
+                                    List<Item_Model> item_models = activity.BarqParents.get(groupPosition).getMyChilds().get(childPosition).getMyItems();
+                                    for (Item_Model item_model : item_models) {
+                                        String url = item_model.getUrl();
+
+                                        Toast.makeText(v.getContext(), url, Toast.LENGTH_SHORT).show();
+                      /*                  final ProgressDialog progressDialog = new ProgressDialog(v.getContext());
+
+                                                Ion.with(v.getContext())
+                                                .load(url)
+                                                .progressDialog(progressDialog)
+                                                .progress(new ProgressCallback() {
+                                                    @Override
+                                                    public void onProgress(long downloaded, long total) {
+                                                        progressDialog.setMessage("" + downloaded + " / " + total);
+                                                        progressDialog.setCancelable(false);
+                                                        progressDialog.show();
+                                                    }
+                                                })
+                                                .write(new File(getFileStreamPath("zip-" + System.currentTimeMillis()))
+                                                .setCallback(new FutureCallback<File>() {
+                                                    @Override
+                                                    public void onCompleted(Exception e, File file) {
+                                                        progressDialog.dismiss();
+                                                        // download done...
+                                                        // do stuff with the File or error
+                                                    }
+                                                });*/
+
+                                    }
+                                    dialogBuilder.dismiss();
+                                }
+                            })
+                            .setButton2Click(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Toast.makeText(v.getContext(), "عملیات لغو شد!", Toast.LENGTH_SHORT).show();
+                                    dialogBuilder.dismiss();
+                                }
+                            })
+                            .show();
+                }
                 return false;
             }
         });
@@ -119,44 +169,26 @@ public class Barq_Sanat extends Fragment {
      * Preparing the list data
      */
     private void prepareListData() {
-        listDataHeader = new ArrayList<String>();
-        listDataChild = new HashMap<String, List<String>>();
+        listDataHeader = new ArrayList<>();
+        listDataChild = new HashMap<>();
+
+        MainActivity activity = (MainActivity) getActivity();
+
+        List<Parent_Model> main = activity.BarqParents;
 
         // Adding header data
-        listDataHeader.add("رشته الکتروتکنیک");
-        listDataHeader.add("رشته الکترونیک");
-        listDataHeader.add("رشته الکترونیک و مخابرات‌دریایی");
-        listDataHeader.add("رشته شبکه و نرم‌افزار رایانه");
-
-        // Adding child data
-        List<String> elec = new ArrayList<String>();
-        elec.add("جدول سه‌ساله دروس");
-        elec.add("سطوح صلاحیت حرفه‌ای");
-        elec.add("کتاب‌های درسی");
-        elec.add("ارزشیابی");
-
-        List<String> electronic = new ArrayList<String>();
-        electronic.add("جدول سه‌ساله دروس");
-        electronic.add("سطوح صلاحیت حرفه‌ای");
-        electronic.add("کتاب‌های درسی");
-        electronic.add("ارزشیابی");
-
-        List<String> mokh = new ArrayList<String>();
-        mokh.add("جدول سه‌ساله دروس");
-        mokh.add("کتاب‌های درسی");
-
-        List<String> narm = new ArrayList<String>();
-        narm.add("جدول سه‌ساله دروس");
-        narm.add("سطوح صلاحیت حرفه‌ای");
-        narm.add("کتاب‌های درسی");
-        narm.add("ارزشیابی");
-        narm.add("فیلم‌های رشته");
-
-
-        listDataChild.put(listDataHeader.get(0), elec); // Header, Child data
-        listDataChild.put(listDataHeader.get(1), electronic);
-        listDataChild.put(listDataHeader.get(2), mokh);
-        listDataChild.put(listDataHeader.get(3), narm);
+        for (int i = 0; i < main.size(); i++)
+        {
+            listDataHeader.add(main.get(i).getParentTitle());
+            List<String> list = new ArrayList<>();
+            // Adding child data
+            List<Child_Model> child = main.get(i).getMyChilds();
+            for (int j = 0; j < child.size(); j++)
+            {
+                list.add(child.get(j).getChildTitle());
+            }
+            listDataChild.put(listDataHeader.get(i), list);
+        }
     }
 
 }

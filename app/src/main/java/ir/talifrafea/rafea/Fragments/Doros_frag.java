@@ -9,13 +9,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListAdapter;
 import android.widget.Toast;
+
+import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
 
 import java.util.LinkedList;
 import java.util.List;
 
+import ir.talifrafea.rafea.MainActivity;
 import ir.talifrafea.rafea.Misc.List_Adapter;
+import ir.talifrafea.rafea.Models.Item_Model;
 import ir.talifrafea.rafea.R;
 
 public class Doros_frag extends Fragment {
@@ -32,6 +35,7 @@ public class Doros_frag extends Fragment {
     public Doros_frag() {
         // Required empty public constructor
     }
+
     public static Doros_frag newInstance(String param1, String param2) {
         Doros_frag fragment = new Doros_frag();
         Bundle args = new Bundle();
@@ -61,7 +65,7 @@ public class Doros_frag extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("دروس مشترک فنی‌حرفه‌ای   ");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("دروس مشترک فنی‌حرفه‌ای   ");
 
         final RecyclerView recList = (RecyclerView) view.findViewById(R.id.cardList);
         recList.setHasFixedSize(true);
@@ -69,16 +73,48 @@ public class Doros_frag extends Fragment {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recList.setLayoutManager(llm);
 
+        final List<String> list = getListData();
+
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int position = recList.getChildLayoutPosition(view);
+                final int position = recList.getChildLayoutPosition(view);
+                String name = list.get(position);
+                final MainActivity activity = (MainActivity) getActivity();
 
-                Toast.makeText(view.getContext(), "you click on "+ (position + 1) + " item!", Toast.LENGTH_SHORT).show();
+
+                final NiftyDialogBuilder dialogBuilder = NiftyDialogBuilder.getInstance(view.getContext());
+
+                dialogBuilder
+                        .withTitle("آیا مطمئن هستید؟")
+                        .withMessage("دانلود فایل " + name)
+                        .withButton1Text("شروع دانلود")
+                        .withButton2Text("لغو")
+                        .withMessageColor("#FFFFFFFF")
+                        .withDialogColor("#FF459969")
+                        .isCancelableOnTouchOutside(true)
+                        .setButton1Click(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Toast.makeText(v.getContext(), "دانلود فایل آغاز شد!", Toast.LENGTH_SHORT).show();
+                                String url = activity.DorosParents.get(position).getUrl();
+
+                                Toast.makeText(v.getContext(), url, Toast.LENGTH_SHORT).show();
+                                dialogBuilder.dismiss();
+                            }
+                        })
+                        .setButton2Click(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Toast.makeText(v.getContext(), "عملیات لغو شد!", Toast.LENGTH_SHORT).show();
+                                dialogBuilder.dismiss();
+                            }
+                        })
+                        .show();
+
             }
         };
 
-        List<String> list = getListData();
         List_Adapter adapter = new List_Adapter(R.layout.item_card, list, onClickListener);
         recList.setAdapter(adapter);
 
@@ -87,21 +123,13 @@ public class Doros_frag extends Fragment {
 
     private List<String> getListData() {
         List<String> list = new LinkedList<>();
-        list.add("فیزیک 1");
-        list.add("فیزیک 2");
-        list.add("فیزیک 3");
-        list.add("فیزیک 4");
-        list.add("فارسی و نگارش 1");
-        list.add("تفکر و سواد رسانه‌ای");
-        list.add("زیست شناسی");
-        list.add("راهنمای هنرآموز زیست‌شناسی");
-        list.add("الزامات محیط کار");
-        list.add("ریاضی 1");
-        list.add("عربی، زبان و قرآن 1");
-        list.add("آمادگی دفاعی");
-        list.add("جغرافیای ایران");
-        list.add("شیمی");
-        list.add("مبانی و کاربرد رایانه");
+        final MainActivity activity = (MainActivity) getActivity();
+
+        List<Item_Model> itemModels = activity.DorosParents;
+        for (Item_Model itemModel : itemModels) {
+            list.add(itemModel.getTitle());
+        }
+
         return list;
     }
 }

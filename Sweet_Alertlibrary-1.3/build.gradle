@@ -1,0 +1,2 @@
+configurations.maybeCreate("default")
+artifacts.add("default", file('Sweet_Alertlibrary-1.3.aar'))
