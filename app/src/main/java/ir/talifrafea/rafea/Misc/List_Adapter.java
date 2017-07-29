@@ -27,6 +27,10 @@ public class List_Adapter extends RecyclerView.Adapter<List_Adapter.ViewHolder> 
         this.onClickListener = onClickListener;
     }
 
+    public String getItem(int position) {
+        return list.get(position);
+    }
+
     @Override
     public int getItemCount() {
         return list.size();
