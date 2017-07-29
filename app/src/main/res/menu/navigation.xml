@@ -1,30 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
 
-    <item
-        android:id="@+id/sanat"
-        android:icon="@drawable/ic_build"
-        android:title="صنعت" />
+        <item
+            android:id="@+id/sanat"
+            android:icon="@drawable/ic_build"
+            android:title="صنعت" />
 
-    <item
-        android:id="@+id/khadamat"
-        android:icon="@drawable/ic_settings_applications"
-        android:title="خدمات" />
+        <item
+            android:id="@+id/khadamat"
+            android:icon="@drawable/ic_settings_applications"
+            android:title="خدمات" />
 
-    <item
-        android:id="@+id/doros"
-        android:icon="@drawable/ic_library_books"
-        android:title="دروس‌مشترک" />
+        <item
+            android:id="@+id/doros"
+            android:checked="true"
+            android:icon="@drawable/ic_library_books"
+            android:title="دروس‌مشترک" />
 
-    <item
-        android:id="@+id/honar"
-        android:icon="@drawable/ic_color_lens"
-        android:title="هنر" />
+        <item
+            android:id="@+id/honar"
+            android:icon="@drawable/ic_color_lens"
+            android:title="هنر" />
 
 
-    <item
-        android:id="@+id/keshavarzi"
-        android:icon="@drawable/ic_local_florist"
-        android:title="کشاورزی" />
+        <item
+            android:id="@+id/keshavarzi"
+            android:icon="@drawable/ic_local_florist"
+            android:title="کشاورزی" />
+    </group>
 
 </menu>
