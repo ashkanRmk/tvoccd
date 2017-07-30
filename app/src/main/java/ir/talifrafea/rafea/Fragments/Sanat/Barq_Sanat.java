@@ -1,8 +1,6 @@
 package ir.talifrafea.rafea.Fragments.Sanat;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,10 +10,7 @@ import android.widget.ExpandableListView;
 import android.widget.Toast;
 
 import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
-import com.koushikdutta.ion.Ion;
-import com.koushikdutta.ion.ProgressCallback;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -105,10 +100,10 @@ public class Barq_Sanat extends Fragment {
                     final NiftyDialogBuilder dialogBuilder = NiftyDialogBuilder.getInstance(v.getContext());
 
                     dialogBuilder
-                            .withTitle("آیا مطمئن هستید؟")
-                            .withMessage("دانلود فایل " + listDataChild.get(
+                            .withTitle("دریافت فایل")
+                            .withMessage("نام فایل: " + listDataChild.get(
                                     listDataHeader.get(groupPosition)).get(
-                                    childPosition) + " از " + listDataHeader.get(groupPosition))
+                                    childPosition) + "\n\n" + listDataHeader.get(groupPosition))
                             .withButton1Text("شروع دانلود")
                             .withButton2Text("لغو")
                             .withMessageColor("#FFFFFFFF")
