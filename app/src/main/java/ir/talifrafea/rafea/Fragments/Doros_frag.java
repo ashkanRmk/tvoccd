@@ -86,8 +86,8 @@ public class Doros_frag extends Fragment {
                 final NiftyDialogBuilder dialogBuilder = NiftyDialogBuilder.getInstance(view.getContext());
 
                 dialogBuilder
-                        .withTitle("آیا مطمئن هستید؟")
-                        .withMessage("دانلود فایل " + name)
+                        .withTitle("دریافت فایل")
+                        .withMessage("نام فایل: " + name)
                         .withButton1Text("شروع دانلود")
                         .withButton2Text("لغو")
                         .withMessageColor("#FFFFFFFF")
@@ -98,6 +98,22 @@ public class Doros_frag extends Fragment {
                             public void onClick(View v) {
                                 Toast.makeText(v.getContext(), "دانلود فایل آغاز شد!", Toast.LENGTH_SHORT).show();
                                 String url = activity.DorosParents.get(position).getUrl();
+/*
+
+                                Future<File> downloading;
+                                final ProgressDialog progressDialog = new ProgressDialog(v.getContext());
+
+                                Ion.with(v.getContext())
+                                        .load(url)
+                                        .progressDialog(progressDialog)
+                                        .progress(new ProgressCallback() {@Override
+                                        public void onProgress(long downloaded, long total) {
+                                            System.out.println("" + downloaded + " / " + total);
+                                        }
+                                        })
+                                        .write(new File("/sdcard/zip-" + System.currentTimeMillis()));
+
+*/
 
                                 Toast.makeText(v.getContext(), url, Toast.LENGTH_SHORT).show();
                                 dialogBuilder.dismiss();
@@ -117,8 +133,6 @@ public class Doros_frag extends Fragment {
 
         List_Adapter adapter = new List_Adapter(R.layout.item_card, list, onClickListener);
         recList.setAdapter(adapter);
-
-
     }
 
     private List<String> getListData() {
