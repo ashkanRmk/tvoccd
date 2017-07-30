@@ -1,9 +1,7 @@
 package ir.talifrafea.rafea.Fragments.Sanat;
 
-import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -25,7 +23,6 @@ import java.util.List;
 
 import ir.talifrafea.rafea.MainActivity;
 import ir.talifrafea.rafea.Misc.Adapter_Films;
-import ir.talifrafea.rafea.Misc.List_Adapter;
 import ir.talifrafea.rafea.Models.Item_Model;
 import ir.talifrafea.rafea.R;
 public class Narm_Films extends Fragment {
@@ -92,8 +89,8 @@ public class Narm_Films extends Fragment {
                 final NiftyDialogBuilder dialogBuilder = NiftyDialogBuilder.getInstance(view.getContext());
 
                 dialogBuilder
-                        .withTitle("آیا مطمئن هستید؟")
-                        .withMessage("دانلود فایل " + name)
+                        .withTitle("دریافت فیلم آموزشی")
+                        .withMessage("نام فایل: " + name)
                         .withButton1Text("شروع دانلود")
                         .withButton2Text("لغو")
                         .withMessageColor("#FFFFFFFF")
@@ -104,6 +101,17 @@ public class Narm_Films extends Fragment {
                             public void onClick(View v) {
                                 Toast.makeText(v.getContext(), "دانلود فایل آغاز شد!", Toast.LENGTH_SHORT).show();
                                 String url = activity.BarqParents.get(3).getMyChilds().get(4).getMyItems().get(position).getUrl();
+
+
+
+
+
+
+
+
+
+
+
 
                                 Toast.makeText(v.getContext(), url, Toast.LENGTH_SHORT).show();
 

@@ -4,15 +4,15 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.provider.Settings;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -20,17 +20,12 @@ import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -50,11 +45,7 @@ import ir.talifrafea.rafea.Models.Parent_Model;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-import static java.security.AccessController.getContext;
-
-
 public class MainActivity extends AppCompatActivity {
-
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -86,9 +77,6 @@ public class MainActivity extends AppCompatActivity {
 
     private ProgressDialog pDialog;
 
-    // URL to get JSON
-    private static String url = "http://tvoccd.ir/JSON_files/barq.json";
-    private static String url_doros = "http://tvoccd.ir/JSON_files/doros.json";
 
     public List<Parent_Model> BarqParents = new LinkedList<>();
     public List<Item_Model> DorosParents = new LinkedList<>();
@@ -101,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
-
 
         //Set Manually Title of Action Bar
         getSupportActionBar().setTitle("معرفی رشته‌های شاخه فنی‌حرفه‌ای");
@@ -175,8 +161,9 @@ public class MainActivity extends AppCompatActivity {
             HttpHandler sh = new HttpHandler();
 
             // Making a request to url and getting response
-            String jsonStr = sh.makeServiceCall(url);
-
+            String url1 = "http://tvoccd.ir/JSON_files/barq.json";
+            String jsonStr = sh.makeServiceCall(url1);
+            String url_doros = "http://tvoccd.ir/JSON_files/doros.json";
             String jsonStr_doros = sh.makeServiceCall(url_doros);
 
             Log.e(TAG, "Response from url: " + jsonStr);
@@ -270,25 +257,19 @@ public class MainActivity extends AppCompatActivity {
             // Dismiss the progress dialog
             if (pDialog.isShowing())
                 pDialog.dismiss();
-
-
         }
-
     }
 
 
     boolean doubleBackToExitPressedOnce = false;
-
     @Override
     public void onBackPressed() {
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
             return;
         }
-
         this.doubleBackToExitPressedOnce = true;
         Toast.makeText(this, "برای خروج دوباره کلیک کنید", Toast.LENGTH_SHORT).show();
-
         new Handler().postDelayed(new Runnable() {
 
             @Override
@@ -313,7 +294,6 @@ public class MainActivity extends AppCompatActivity {
         } else if (position == 5) {
             newFragment = new Sanat_frag();
         }
-
 
         // Create new fragment and transaction
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
