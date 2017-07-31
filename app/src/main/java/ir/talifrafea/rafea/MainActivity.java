@@ -173,12 +173,15 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject jsonObj = new JSONObject(jsonStr);
                     JSONObject jsonObj_doros = new JSONObject(jsonStr_doros);
 
+
+//                    JSONArray sanat = jsonObj.getJSONArray("sanat");
+
+
                     // Getting JSON Array node
                     JSONArray barq = jsonObj.getJSONArray("barq");
                     JSONArray doros = jsonObj_doros.getJSONArray("doros");
 
-                    for (int i = 0; i < doros.length(); i++)
-                    {
+                    for (int i = 0; i < doros.length(); i++) {
                         JSONObject item = doros.getJSONObject(i);
 
                         String name = item.getString("file");
