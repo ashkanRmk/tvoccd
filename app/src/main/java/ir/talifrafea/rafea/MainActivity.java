@@ -3,6 +3,7 @@ package ir.talifrafea.rafea;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -84,6 +85,13 @@ public class MainActivity extends AppCompatActivity {
     public List<Parent_Model> MemariParent = new LinkedList<>();
     public List<Parent_Model> MavadParent = new LinkedList<>();
     public List<Parent_Model> MekanikParent = new LinkedList<>();
+
+    public List<Parent_Model> BazarganiParent = new LinkedList<>();
+    public List<Parent_Model> BehdashtParent = new LinkedList<>();
+    public List<Parent_Model> KhadamatParent = new LinkedList<>();
+    public List<Parent_Model> KeshavarziParent = new LinkedList<>();
+    public List<Parent_Model> HonarParent = new LinkedList<>();
+
     public List<Item_Model> DorosParents = new LinkedList<>();
 
 
@@ -98,6 +106,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        final String PREFS_NAME = "MyPrefsFile";
+
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+
+        if (settings.getBoolean("my_first_time", true)) {
+            Log.d("Comments", "First time");
+            Intent intent = new Intent(MainActivity.this, IntroActivity.class);
+            startActivity(intent);
+            settings.edit().putBoolean("my_first_time", false).apply();
+        }
+
 
         //Change Default Font
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
@@ -169,11 +190,209 @@ public class MainActivity extends AppCompatActivity {
             String jsonStr = sh.makeServiceCall(url1);
             String url_doros = "http://tvoccd.ir/JSON_files/doros.json";
             String jsonStr_doros = sh.makeServiceCall(url_doros);
+            String url_honar_kesh = "http://tvoccd.ir/JSON_files/honar_keshavarzi.json";
+            String jsonStr_honar = sh.makeServiceCall(url_honar_kesh);
+            String url_khadam = "http://tvoccd.ir/JSON_files/khadamat.json";
+            String jsonStr_khadam = sh.makeServiceCall(url_khadam);
 
             Log.e(TAG, "Response from url: " + jsonStr);
 
-            if (jsonStr != null && jsonStr_doros != null) {
+            if (jsonStr != null && jsonStr_doros != null && jsonStr_honar != null &&
+            jsonStr_khadam != null) {
                 try {
+
+                    JSONObject jsonObj_khadam = new JSONObject(jsonStr_khadam);
+                    JSONArray khadam = jsonObj_khadam.getJSONArray("khadamat");
+                    for (int i = 0; i < khadam.length(); i++){
+                        JSONObject goroh = khadam.getJSONObject(i);
+                        String name = goroh.getString("name");
+                        switch (name){
+                            case "bazargani":
+                                JSONArray bazargani = goroh.getJSONArray("reshte");
+
+                                // looping through All
+                                for (int m = 0; m < bazargani.length(); m++) {
+                                    JSONObject item = bazargani.getJSONObject(m);
+
+                                    String groupName = item.getString("group");
+                                    Parent_Model parentModel = new Parent_Model(groupName);
+
+                                    JSONArray child = item.getJSONArray("child");
+                                    BazarganiParent.add(parentModel);
+                                    List<Child_Model> childModels = new LinkedList<>();
+
+                                    for (int j = 0; j < child.length(); j++) {
+                                        JSONObject childItem = child.getJSONObject(j);
+
+                                        String childName = childItem.getString("title");
+                                        childModels.add(new Child_Model(childName));
+
+                                        List<Item_Model> itemModels = new LinkedList<>();
+                                        JSONArray urls = childItem.getJSONArray("url");
+                                        for (int k = 0; k < urls.length(); k++) {
+                                            JSONObject url = urls.getJSONObject(k);
+
+                                            String fileTitle = url.getString("file");
+                                            String adr = url.getString("adr");
+                                            itemModels.add(new Item_Model(fileTitle, adr));
+                                        }
+                                        childModels.get(j).setMyItems(itemModels);
+                                    }
+                                    parentModel.setMyChilds(childModels);
+                                }
+                                break;
+                            case "behdasht":
+                                JSONArray behdasht = goroh.getJSONArray("reshte");
+
+                                // looping through All
+                                for (int m = 0; m < behdasht.length(); m++) {
+                                    JSONObject item = behdasht.getJSONObject(m);
+
+                                    String groupName = item.getString("group");
+                                    Parent_Model parentModel = new Parent_Model(groupName);
+
+                                    JSONArray child = item.getJSONArray("child");
+                                    BehdashtParent.add(parentModel);
+                                    List<Child_Model> childModels = new LinkedList<>();
+
+                                    for (int j = 0; j < child.length(); j++) {
+                                        JSONObject childItem = child.getJSONObject(j);
+
+                                        String childName = childItem.getString("title");
+                                        childModels.add(new Child_Model(childName));
+
+                                        List<Item_Model> itemModels = new LinkedList<>();
+                                        JSONArray urls = childItem.getJSONArray("url");
+                                        for (int k = 0; k < urls.length(); k++) {
+                                            JSONObject url = urls.getJSONObject(k);
+
+                                            String fileTitle = url.getString("file");
+                                            String adr = url.getString("adr");
+                                            itemModels.add(new Item_Model(fileTitle, adr));
+                                        }
+                                        childModels.get(j).setMyItems(itemModels);
+                                    }
+                                    parentModel.setMyChilds(childModels);
+                                }
+                                break;
+                            case "khadamat":
+                                JSONArray khadamat = goroh.getJSONArray("reshte");
+
+                                // looping through All
+                                for (int m = 0; m < khadamat.length(); m++) {
+                                    JSONObject item = khadamat.getJSONObject(m);
+
+                                    String groupName = item.getString("group");
+                                    Parent_Model parentModel = new Parent_Model(groupName);
+
+                                    JSONArray child = item.getJSONArray("child");
+                                    KhadamatParent.add(parentModel);
+                                    List<Child_Model> childModels = new LinkedList<>();
+
+                                    for (int j = 0; j < child.length(); j++) {
+                                        JSONObject childItem = child.getJSONObject(j);
+
+                                        String childName = childItem.getString("title");
+                                        childModels.add(new Child_Model(childName));
+
+                                        List<Item_Model> itemModels = new LinkedList<>();
+                                        JSONArray urls = childItem.getJSONArray("url");
+                                        for (int k = 0; k < urls.length(); k++) {
+                                            JSONObject url = urls.getJSONObject(k);
+
+                                            String fileTitle = url.getString("file");
+                                            String adr = url.getString("adr");
+                                            itemModels.add(new Item_Model(fileTitle, adr));
+                                        }
+                                        childModels.get(j).setMyItems(itemModels);
+                                    }
+                                    parentModel.setMyChilds(childModels);
+                                }
+                                break;
+                        }
+                    }
+
+
+                    JSONObject jsonObj_honar_kesh = new JSONObject(jsonStr_honar);
+                    JSONArray honar_kesh = jsonObj_honar_kesh.getJSONArray("honar_keshavarzi");
+                    for (int i = 0; i < honar_kesh.length(); i++){
+                        JSONObject goroh = honar_kesh.getJSONObject(i);
+                        String name = goroh.getString("name");
+                        switch (name){
+                            case "honar":
+                                JSONArray honar = goroh.getJSONArray("reshte");
+
+                                // looping through All
+                                for (int m = 0; m < honar.length(); m++) {
+                                    JSONObject item = honar.getJSONObject(m);
+
+                                    String groupName = item.getString("group");
+                                    Parent_Model parentModel = new Parent_Model(groupName);
+
+                                    JSONArray child = item.getJSONArray("child");
+                                    HonarParent.add(parentModel);
+                                    List<Child_Model> childModels = new LinkedList<>();
+
+                                    for (int j = 0; j < child.length(); j++) {
+                                        JSONObject childItem = child.getJSONObject(j);
+
+                                        String childName = childItem.getString("title");
+                                        childModels.add(new Child_Model(childName));
+
+                                        List<Item_Model> itemModels = new LinkedList<>();
+                                        JSONArray urls = childItem.getJSONArray("url");
+                                        for (int k = 0; k < urls.length(); k++) {
+                                            JSONObject url = urls.getJSONObject(k);
+
+                                            String fileTitle = url.getString("file");
+                                            String adr = url.getString("adr");
+                                            itemModels.add(new Item_Model(fileTitle, adr));
+                                        }
+                                        childModels.get(j).setMyItems(itemModels);
+                                    }
+                                    parentModel.setMyChilds(childModels);
+                                }
+                                break;
+                            case "keshavarzi":
+                                JSONArray keshavarzi = goroh.getJSONArray("reshte");
+
+                                // looping through All
+                                for (int m = 0; m < keshavarzi.length(); m++) {
+                                    JSONObject item = keshavarzi.getJSONObject(m);
+
+                                    String groupName = item.getString("group");
+                                    Parent_Model parentModel = new Parent_Model(groupName);
+
+                                    JSONArray child = item.getJSONArray("child");
+                                    KeshavarziParent.add(parentModel);
+                                    List<Child_Model> childModels = new LinkedList<>();
+
+                                    for (int j = 0; j < child.length(); j++) {
+                                        JSONObject childItem = child.getJSONObject(j);
+
+                                        String childName = childItem.getString("title");
+                                        childModels.add(new Child_Model(childName));
+
+                                        List<Item_Model> itemModels = new LinkedList<>();
+                                        JSONArray urls = childItem.getJSONArray("url");
+                                        for (int k = 0; k < urls.length(); k++) {
+                                            JSONObject url = urls.getJSONObject(k);
+
+                                            String fileTitle = url.getString("file");
+                                            String adr = url.getString("adr");
+                                            itemModels.add(new Item_Model(fileTitle, adr));
+                                        }
+                                        childModels.get(j).setMyItems(itemModels);
+                                    }
+                                    parentModel.setMyChilds(childModels);
+                                }
+                                break;
+                        }
+                    }
+
+
+
+
                     JSONObject jsonObj = new JSONObject(jsonStr);
 
 
