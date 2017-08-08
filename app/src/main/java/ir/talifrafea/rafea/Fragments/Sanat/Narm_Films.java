@@ -1,7 +1,9 @@
 package ir.talifrafea.rafea.Fragments.Sanat;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -81,7 +83,7 @@ public class Narm_Films extends Fragment {
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 final int position = recList.getChildLayoutPosition(view);
                 final MainActivity activity = (MainActivity) getActivity();
 
@@ -102,18 +104,17 @@ public class Narm_Films extends Fragment {
                                 Toast.makeText(v.getContext(), "دانلود فایل آغاز شد!", Toast.LENGTH_SHORT).show();
                                 String url = activity.BarqParents.get(3).getMyChilds().get(4).getMyItems().get(position).getUrl();
 
+                                if (!url.startsWith("http://") && !url.startsWith("https://"))
+                                    url = "http://" + url;
 
-
-
-
-
-
-
-
-
-
-
-                                Toast.makeText(v.getContext(), url, Toast.LENGTH_SHORT).show();
+                                try {
+                                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                                    startActivity(browserIntent);
+                                } catch (Exception e) {
+                                    Toast.makeText(view.getContext(), "No application can handle this request."
+                                            + " Please install a web browser",  Toast.LENGTH_LONG).show();
+                                    e.printStackTrace();
+                                }
 
                                 dialogBuilder.dismiss();
                             }

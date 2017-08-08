@@ -1,6 +1,7 @@
 package ir.talifrafea.rafea.Fragments.Sanat;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -69,7 +70,7 @@ public class Mavad_Sanat extends Fragment {
     HashMap<String, List<String>> listDataChild;
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
 
@@ -111,30 +112,17 @@ public class Mavad_Sanat extends Fragment {
                                 List<Item_Model> item_models = activity.MavadParent.get(groupPosition).getMyChilds().get(childPosition).getMyItems();
                                 for (Item_Model item_model : item_models) {
                                     String url = item_model.getUrl();
+                                    if (!url.startsWith("http://") && !url.startsWith("https://"))
+                                        url = "http://" + url;
 
-                                    Toast.makeText(v.getContext(), url, Toast.LENGTH_SHORT).show();
-                  /*                  final ProgressDialog progressDialog = new ProgressDialog(v.getContext());
-
-                                            Ion.with(v.getContext())
-                                            .load(url)
-                                            .progressDialog(progressDialog)
-                                            .progress(new ProgressCallback() {
-                                                @Override
-                                                public void onProgress(long downloaded, long total) {
-                                                    progressDialog.setMessage("" + downloaded + " / " + total);
-                                                    progressDialog.setCancelable(false);
-                                                    progressDialog.show();
-                                                }
-                                            })
-                                            .write(new File(getFileStreamPath("zip-" + System.currentTimeMillis()))
-                                            .setCallback(new FutureCallback<File>() {
-                                                @Override
-                                                public void onCompleted(Exception e, File file) {
-                                                    progressDialog.dismiss();
-                                                    // download done...
-                                                    // do stuff with the File or error
-                                                }
-                                            });*/
+                                    try {
+                                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                                        startActivity(browserIntent);
+                                    } catch (Exception e) {
+                                        Toast.makeText(view.getContext(), "No application can handle this request."
+                                                + " Please install a web browser",  Toast.LENGTH_LONG).show();
+                                        e.printStackTrace();
+                                    }
 
                                 }
                                 dialogBuilder.dismiss();
