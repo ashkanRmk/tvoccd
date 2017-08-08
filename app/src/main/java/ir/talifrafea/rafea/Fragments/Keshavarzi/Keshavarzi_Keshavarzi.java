@@ -1,6 +1,7 @@
 package ir.talifrafea.rafea.Fragments.Keshavarzi;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,12 +10,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.Toast;
+
+import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import ir.talifrafea.rafea.MainActivity;
 import ir.talifrafea.rafea.Misc.ExpandableListAdapter;
+import ir.talifrafea.rafea.Models.Child_Model;
+import ir.talifrafea.rafea.Models.Item_Model;
+import ir.talifrafea.rafea.Models.Parent_Model;
 import ir.talifrafea.rafea.R;
 public class Keshavarzi_Keshavarzi extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -62,7 +70,7 @@ public class Keshavarzi_Keshavarzi extends Fragment {
     HashMap<String, List<String>> listDataChild;
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
 
@@ -76,6 +84,61 @@ public class Keshavarzi_Keshavarzi extends Fragment {
 
         // setting list adapter
         expListView.setAdapter(listAdapter);
+        // Listview on child click listener
+        expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v,
+                                        final int groupPosition, final int childPosition, long id) {
+                final MainActivity activity = (MainActivity) getActivity();
+
+                final NiftyDialogBuilder dialogBuilder = NiftyDialogBuilder.getInstance(v.getContext());
+
+                dialogBuilder
+                        .withTitle("دریافت فایل")
+                        .withMessage("نام فایل: " + listDataChild.get(
+                                listDataHeader.get(groupPosition)).get(
+                                childPosition) + "\n\n" + listDataHeader.get(groupPosition))
+                        .withButton1Text("شروع دانلود")
+                        .withButton2Text("لغو")
+                        .withMessageColor("#FFFFFFFF")
+                        .withDialogColor("#FF459969")
+                        .isCancelableOnTouchOutside(true)
+                        .setButton1Click(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Toast.makeText(v.getContext(), "دانلود فایل آغاز شد!", Toast.LENGTH_SHORT).show();
+                                List<Item_Model> item_models = activity.KeshavarziParent.get(groupPosition).getMyChilds().get(childPosition).getMyItems();
+                                for (Item_Model item_model : item_models) {
+                                    String url = item_model.getUrl();
+
+                                    if (!url.startsWith("http://") && !url.startsWith("https://"))
+                                        url = "http://" + url;
+
+                                    try {
+                                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                                        startActivity(browserIntent);
+                                    } catch (Exception e) {
+                                        Toast.makeText(view.getContext(), "No application can handle this request."
+                                                + " Please install a web browser", Toast.LENGTH_LONG).show();
+                                        e.printStackTrace();
+                                    }
+
+                                }
+                                dialogBuilder.dismiss();
+                            }
+                        })
+                        .setButton2Click(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Toast.makeText(v.getContext(), "عملیات لغو شد!", Toast.LENGTH_SHORT).show();
+                                dialogBuilder.dismiss();
+                            }
+                        })
+                        .show();
+                return false;
+            }
+        });
     }
 
 
@@ -83,52 +146,23 @@ public class Keshavarzi_Keshavarzi extends Fragment {
      * Preparing the list data
      */
     private void prepareListData() {
-        listDataHeader = new ArrayList<String>();
-        listDataChild = new HashMap<String, List<String>>();
+        listDataHeader = new ArrayList<>();
+        listDataChild = new HashMap<>();
+
+        MainActivity activity = (MainActivity) getActivity();
+
+        List<Parent_Model> main = activity.KeshavarziParent;
 
         // Adding header data
-        listDataHeader.add("رشته امور زراعی");
-        listDataHeader.add("رشته امور باغی");
-        listDataHeader.add("رشته امور دامی");
-        listDataHeader.add("رشته ماشین‌های کشاورزی");
-        listDataHeader.add("رشته صنایع غذایی");
-
-        // Adding child data
-        List<String> zaraee = new ArrayList<String>();
-        zaraee.add("جدول سه‌ساله دروس");
-        zaraee.add("سطوح صلاحیت حرفه‌ای");
-        zaraee.add("کتاب‌های درسی");
-        zaraee.add("ارزشیابی");
-
-        List<String> baqi = new ArrayList<String>();
-        baqi.add("جدول سه‌ساله دروس");
-        baqi.add("سطوح صلاحیت حرفه‌ای");
-        baqi.add("کتاب‌های درسی");
-        baqi.add("ارزشیابی");
-
-        List<String> dami = new ArrayList<String>();
-        dami.add("جدول سه‌ساله دروس");
-        dami.add("سطوح صلاحیت حرفه‌ای");
-        dami.add("کتاب‌های درسی");
-        dami.add("ارزشیابی");
-
-        List<String> mk = new ArrayList<String>();
-        mk.add("جدول سه‌ساله دروس");
-        mk.add("سطوح صلاحیت حرفه‌ای");
-        mk.add("کتاب‌های درسی");
-        mk.add("ارزشیابی");
-
-        List<String> sanaee = new ArrayList<String>();
-        sanaee.add("جدول سه‌ساله دروس");
-        sanaee.add("سطوح صلاحیت حرفه‌ای");
-        sanaee.add("کتاب‌های درسی");
-
-        listDataChild.put(listDataHeader.get(0), zaraee); // Header, Child data
-        listDataChild.put(listDataHeader.get(1), baqi);
-        listDataChild.put(listDataHeader.get(2), dami);
-        listDataChild.put(listDataHeader.get(3), mk);
-        listDataChild.put(listDataHeader.get(4), sanaee);
+        for (int i = 0; i < main.size(); i++) {
+            listDataHeader.add(main.get(i).getParentTitle());
+            List<String> list = new ArrayList<>();
+            // Adding child data
+            List<Child_Model> child = main.get(i).getMyChilds();
+            for (int j = 0; j < child.size(); j++) {
+                list.add(child.get(j).getChildTitle());
+            }
+            listDataChild.put(listDataHeader.get(i), list);
+        }
     }
-
 }
-

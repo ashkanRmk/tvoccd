@@ -1,6 +1,7 @@
 package ir.talifrafea.rafea.Fragments.Honar;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,12 +10,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.Toast;
+
+import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import ir.talifrafea.rafea.MainActivity;
 import ir.talifrafea.rafea.Misc.ExpandableListAdapter;
+import ir.talifrafea.rafea.Models.Child_Model;
+import ir.talifrafea.rafea.Models.Item_Model;
+import ir.talifrafea.rafea.Models.Parent_Model;
 import ir.talifrafea.rafea.R;
 public class Honar_Honar extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -62,7 +70,7 @@ public class Honar_Honar extends Fragment {
     HashMap<String, List<String>> listDataChild;
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         // get the listview
@@ -75,6 +83,61 @@ public class Honar_Honar extends Fragment {
 
         // setting list adapter
         expListView.setAdapter(listAdapter);
+        // Listview on child click listener
+        expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v,
+                                        final int groupPosition, final int childPosition, long id) {
+                final MainActivity activity = (MainActivity) getActivity();
+
+                final NiftyDialogBuilder dialogBuilder = NiftyDialogBuilder.getInstance(v.getContext());
+
+                dialogBuilder
+                        .withTitle("دریافت فایل")
+                        .withMessage("نام فایل: " + listDataChild.get(
+                                listDataHeader.get(groupPosition)).get(
+                                childPosition) + "\n\n" + listDataHeader.get(groupPosition))
+                        .withButton1Text("شروع دانلود")
+                        .withButton2Text("لغو")
+                        .withMessageColor("#FFFFFFFF")
+                        .withDialogColor("#FF459969")
+                        .isCancelableOnTouchOutside(true)
+                        .setButton1Click(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Toast.makeText(v.getContext(), "دانلود فایل آغاز شد!", Toast.LENGTH_SHORT).show();
+                                List<Item_Model> item_models = activity.HonarParent.get(groupPosition).getMyChilds().get(childPosition).getMyItems();
+                                for (Item_Model item_model : item_models) {
+                                    String url = item_model.getUrl();
+
+                                    if (!url.startsWith("http://") && !url.startsWith("https://"))
+                                        url = "http://" + url;
+
+                                    try {
+                                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                                        startActivity(browserIntent);
+                                    } catch (Exception e) {
+                                        Toast.makeText(view.getContext(), "No application can handle this request."
+                                                + " Please install a web browser", Toast.LENGTH_LONG).show();
+                                        e.printStackTrace();
+                                    }
+
+                                }
+                                dialogBuilder.dismiss();
+                            }
+                        })
+                        .setButton2Click(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Toast.makeText(v.getContext(), "عملیات لغو شد!", Toast.LENGTH_SHORT).show();
+                                dialogBuilder.dismiss();
+                            }
+                        })
+                        .show();
+                return false;
+            }
+        });
     }
 
 
@@ -82,85 +145,23 @@ public class Honar_Honar extends Fragment {
      * Preparing the list data
      */
     private void prepareListData() {
-        listDataHeader = new ArrayList<String>();
-        listDataChild = new HashMap<String, List<String>>();
+        listDataHeader = new ArrayList<>();
+        listDataChild = new HashMap<>();
+
+        MainActivity activity = (MainActivity) getActivity();
+
+        List<Parent_Model> main = activity.HonarParent;
 
         // Adding header data
-        listDataHeader.add("رشته فوتو - گرافیک");
-        listDataHeader.add("رشته طراحی و دوخت");
-        listDataHeader.add("رشته معماری داخلی");
-        listDataHeader.add("رشته صنایع‌دستی (فرش)");
-        listDataHeader.add("رشته پویانمایی (انیمیشن)");
-        listDataHeader.add("رشته تولید برنامه تلویزیونی");
-        listDataHeader.add("رشته گرافیک");
-        listDataHeader.add("رشته نقاشی");
-        listDataHeader.add("رشته موسیقی (جهانی)");
-        listDataHeader.add("رشته موسیقی (ایرانی)");
-        listDataHeader.add("رشته نقشه‌کشی معماری");
-
-        // Adding child data
-        List<String> graph = new ArrayList<String>();
-        graph.add("جدول سه‌ساله دروس");
-        graph.add("سطوح صلاحیت حرفه‌ای");
-        graph.add("کتاب‌های درسی");
-
-        List<String> tarahi = new ArrayList<String>();
-        tarahi.add("جدول سه‌ساله دروس");
-        tarahi.add("سطوح صلاحیت حرفه‌ای");
-        tarahi.add("کتاب‌های درسی");
-        tarahi.add("ارزشیابی");
-
-        List<String> memari = new ArrayList<String>();
-        memari.add("جدول سه‌ساله دروس");
-        memari.add("سطوح صلاحیت حرفه‌ای");
-        memari.add("کتاب‌های درسی");
-        memari.add("ارزشیابی");
-
-        List<String> dasti = new ArrayList<String>();
-        dasti.add("جدول سه‌ساله دروس");
-        dasti.add("سطوح صلاحیت حرفه‌ای");
-        dasti.add("کتاب‌های درسی");
-        dasti.add("ارزشیابی");
-
-        List<String> ani = new ArrayList<String>();
-        ani.add("جدول سه‌ساله دروس");
-
-        List<String> tele = new ArrayList<String>();
-        tele.add("جدول سه‌ساله دروس");
-
-        List<String> graphic = new ArrayList<String>();
-        graphic.add("کتاب‌های درسی");
-        graphic.add("ارزشیابی");
-
-        List<String> nagh = new ArrayList<String>();
-        nagh.add("کتاب‌های درسی");
-
-        List<String> mj = new ArrayList<String>();
-        mj.add("کتاب‌های درسی");
-
-        List<String> mi = new ArrayList<String>();
-        mi.add("کتاب‌های درسی");
-
-        List<String> namayesh = new ArrayList<String>();
-        namayesh.add("کتاب‌های درسی");
-
-        List<String> cinema = new ArrayList<String>();
-        cinema.add("کتاب‌های درسی");
-
-        List<String> naqshe = new ArrayList<String>();
-        naqshe.add("کتاب‌های درسی");
-
-        listDataChild.put(listDataHeader.get(0), graph); // Header, Child data
-        listDataChild.put(listDataHeader.get(1), tarahi);
-        listDataChild.put(listDataHeader.get(2), memari);
-        listDataChild.put(listDataHeader.get(3), dasti);
-        listDataChild.put(listDataHeader.get(4), ani);
-        listDataChild.put(listDataHeader.get(5), tele);
-        listDataChild.put(listDataHeader.get(6), graphic);
-        listDataChild.put(listDataHeader.get(7), nagh);
-        listDataChild.put(listDataHeader.get(8), mj);
-        listDataChild.put(listDataHeader.get(9), mi);
-        listDataChild.put(listDataHeader.get(10), naqshe);
+        for (int i = 0; i < main.size(); i++) {
+            listDataHeader.add(main.get(i).getParentTitle());
+            List<String> list = new ArrayList<>();
+            // Adding child data
+            List<Child_Model> child = main.get(i).getMyChilds();
+            for (int j = 0; j < child.size(); j++) {
+                list.add(child.get(j).getChildTitle());
+            }
+            listDataChild.put(listDataHeader.get(i), list);
+        }
     }
-
 }

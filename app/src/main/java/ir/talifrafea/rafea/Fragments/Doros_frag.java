@@ -1,5 +1,8 @@
 package ir.talifrafea.rafea.Fragments;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -77,7 +80,7 @@ public class Doros_frag extends Fragment {
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 final int position = recList.getChildLayoutPosition(view);
                 String name = list.get(position);
                 final MainActivity activity = (MainActivity) getActivity();
@@ -98,24 +101,18 @@ public class Doros_frag extends Fragment {
                             public void onClick(View v) {
                                 Toast.makeText(v.getContext(), "دانلود فایل آغاز شد!", Toast.LENGTH_SHORT).show();
                                 String url = activity.DorosParents.get(position).getUrl();
-/*
 
-                                Future<File> downloading;
-                                final ProgressDialog progressDialog = new ProgressDialog(v.getContext());
+                                if (!url.startsWith("http://") && !url.startsWith("https://"))
+                                    url = "http://" + url;
 
-                                Ion.with(v.getContext())
-                                        .load(url)
-                                        .progressDialog(progressDialog)
-                                        .progress(new ProgressCallback() {@Override
-                                        public void onProgress(long downloaded, long total) {
-                                            System.out.println("" + downloaded + " / " + total);
-                                        }
-                                        })
-                                        .write(new File("/sdcard/zip-" + System.currentTimeMillis()));
-
-*/
-
-                                Toast.makeText(v.getContext(), url, Toast.LENGTH_SHORT).show();
+                                try {
+                                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                                    startActivity(browserIntent);
+                                } catch (Exception e) {
+                                    Toast.makeText(view.getContext(), "No application can handle this request."
+                                            + " Please install a web browser",  Toast.LENGTH_LONG).show();
+                                    e.printStackTrace();
+                                }
                                 dialogBuilder.dismiss();
                             }
                         })
