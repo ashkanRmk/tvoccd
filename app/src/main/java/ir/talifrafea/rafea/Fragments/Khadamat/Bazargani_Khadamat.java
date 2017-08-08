@@ -1,5 +1,7 @@
 package ir.talifrafea.rafea.Fragments.Khadamat;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -7,12 +9,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.Toast;
+
+import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import ir.talifrafea.rafea.MainActivity;
 import ir.talifrafea.rafea.Misc.ExpandableListAdapter;
+import ir.talifrafea.rafea.Models.Child_Model;
+import ir.talifrafea.rafea.Models.Item_Model;
+import ir.talifrafea.rafea.Models.Parent_Model;
 import ir.talifrafea.rafea.R;
 
 public class Bazargani_Khadamat extends Fragment {
@@ -28,6 +37,7 @@ public class Bazargani_Khadamat extends Fragment {
     public Bazargani_Khadamat() {
         // Required empty public constructor
     }
+
     public static Bazargani_Khadamat newInstance(String param1, String param2) {
         Bazargani_Khadamat fragment = new Bazargani_Khadamat();
         Bundle args = new Bundle();
@@ -61,7 +71,7 @@ public class Bazargani_Khadamat extends Fragment {
     HashMap<String, List<String>> listDataChild;
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
 
@@ -75,6 +85,61 @@ public class Bazargani_Khadamat extends Fragment {
 
         // setting list adapter
         expListView.setAdapter(listAdapter);
+        // Listview on child click listener
+        expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v,
+                                        final int groupPosition, final int childPosition, long id) {
+                final MainActivity activity = (MainActivity) getActivity();
+
+                final NiftyDialogBuilder dialogBuilder = NiftyDialogBuilder.getInstance(v.getContext());
+
+                dialogBuilder
+                        .withTitle("دریافت فایل")
+                        .withMessage("نام فایل: " + listDataChild.get(
+                                listDataHeader.get(groupPosition)).get(
+                                childPosition) + "\n\n" + listDataHeader.get(groupPosition))
+                        .withButton1Text("شروع دانلود")
+                        .withButton2Text("لغو")
+                        .withMessageColor("#FFFFFFFF")
+                        .withDialogColor("#FF459969")
+                        .isCancelableOnTouchOutside(true)
+                        .setButton1Click(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Toast.makeText(v.getContext(), "دانلود فایل آغاز شد!", Toast.LENGTH_SHORT).show();
+                                List<Item_Model> item_models = activity.BazarganiParent.get(groupPosition).getMyChilds().get(childPosition).getMyItems();
+                                for (Item_Model item_model : item_models) {
+                                    String url = item_model.getUrl();
+
+                                    if (!url.startsWith("http://") && !url.startsWith("https://"))
+                                        url = "http://" + url;
+
+                                    try {
+                                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                                        startActivity(browserIntent);
+                                    } catch (Exception e) {
+                                        Toast.makeText(view.getContext(), "No application can handle this request."
+                                                + " Please install a web browser", Toast.LENGTH_LONG).show();
+                                        e.printStackTrace();
+                                    }
+
+                                }
+                                dialogBuilder.dismiss();
+                            }
+                        })
+                        .setButton2Click(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Toast.makeText(v.getContext(), "عملیات لغو شد!", Toast.LENGTH_SHORT).show();
+                                dialogBuilder.dismiss();
+                            }
+                        })
+                        .show();
+                return false;
+            }
+        });
     }
 
 
@@ -82,20 +147,23 @@ public class Bazargani_Khadamat extends Fragment {
      * Preparing the list data
      */
     private void prepareListData() {
-        listDataHeader = new ArrayList<String>();
-        listDataChild = new HashMap<String, List<String>>();
+        listDataHeader = new ArrayList<>();
+        listDataChild = new HashMap<>();
+
+        MainActivity activity = (MainActivity) getActivity();
+
+        List<Parent_Model> main = activity.BazarganiParent;
 
         // Adding header data
-        listDataHeader.add("رشته حسابداری");
-
-        // Adding child data
-        List<String> hesab = new ArrayList<String>();
-        hesab.add("سطوح صلاحیت حرفه‌ای");
-        hesab.add("کتاب‌های درسی");
-        hesab.add("ارزشیابی");
-
-        listDataChild.put(listDataHeader.get(0), hesab);
+        for (int i = 0; i < main.size(); i++) {
+            listDataHeader.add(main.get(i).getParentTitle());
+            List<String> list = new ArrayList<>();
+            // Adding child data
+            List<Child_Model> child = main.get(i).getMyChilds();
+            for (int j = 0; j < child.size(); j++) {
+                list.add(child.get(j).getChildTitle());
+            }
+            listDataChild.put(listDataHeader.get(i), list);
+        }
     }
-
-
 }
