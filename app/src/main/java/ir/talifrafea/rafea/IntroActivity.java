@@ -21,13 +21,13 @@ public class IntroActivity extends AppIntro {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        addSlide(AppIntroFragment.newInstance("به محاسبه گر توابع تک متغیره خوش آمدید!", "شما با این برنامه میتوانید مقادیر توابع تک متغیره خود را  در بازه ای مشخص با دقتی خاص محاسبه کرده و نمودار آن را مشاهده کنید", R.drawable.img, 2333));
-        addSlide(AppIntroFragment.newInstance("گام اول", "ابتدا میبایست نام و متغیر تابع خود را در کادر بالا مشخص نمایید", R.drawable.name, 2333));
-        addSlide(AppIntroFragment.newInstance("گام دوم", "در این بخش میبایست مقادیر کمینه و بیشینه بازه تابع و همچنین دقت گام های آن را وارد کنید", R.drawable.minmax, 2333));
-        addSlide(AppIntroFragment.newInstance("گام سوم", "در این بخش میتوانید ثابت های اختیاری تابع خود را ثبت و مقداردهی نمایید و در تابع وارد نمایید", R.drawable.consts, 2333));
-        addSlide(AppIntroFragment.newInstance("گام آخر", "در نهایت پس از وارد کردن محتوای تابع بر روی دکمه ستاره کلیک کرده تا نتیجه محاسبات و همچنین نمودار رسم شده را مشاهده نمایید", R.drawable.done, 2333));
-        addSlide(AppIntroFragment.newInstance("آماده برای شروع!", "امیدواریم برنامه پیش رو کارایی لازم را داشته باشد و برای ارسال نظرات به صفحه درباره ما مراجعه کنید", R.drawable.img, 2333));
+//
+//        addSlide(AppIntroFragment.newInstance("به محاسبه گر توابع تک متغیره خوش آمدید!", "شما با این برنامه میتوانید مقادیر توابع تک متغیره خود را  در بازه ای مشخص با دقتی خاص محاسبه کرده و نمودار آن را مشاهده کنید", R.drawable.img, 2333));
+//        addSlide(AppIntroFragment.newInstance("گام اول", "ابتدا میبایست نام و متغیر تابع خود را در کادر بالا مشخص نمایید", R.drawable.name, 2333));
+//        addSlide(AppIntroFragment.newInstance("گام دوم", "در این بخش میبایست مقادیر کمینه و بیشینه بازه تابع و همچنین دقت گام های آن را وارد کنید", R.drawable.minmax, 2333));
+//        addSlide(AppIntroFragment.newInstance("گام سوم", "در این بخش میتوانید ثابت های اختیاری تابع خود را ثبت و مقداردهی نمایید و در تابع وارد نمایید", R.drawable.consts, 2333));
+//        addSlide(AppIntroFragment.newInstance("گام آخر", "در نهایت پس از وارد کردن محتوای تابع بر روی دکمه ستاره کلیک کرده تا نتیجه محاسبات و همچنین نمودار رسم شده را مشاهده نمایید", R.drawable.done, 2333));
+//        addSlide(AppIntroFragment.newInstance("آماده برای شروع!", "امیدواریم برنامه پیش رو کارایی لازم را داشته باشد و برای ارسال نظرات به صفحه درباره ما مراجعه کنید", R.drawable.img, 2333));
 
         // OPTIONAL METHODS
         // Override bar/separator color.

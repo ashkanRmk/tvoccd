@@ -108,24 +108,24 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        final String PREFS_NAME = "MyPrefsFile";
-
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-
-        if (settings.getBoolean("my_first_time", true)) {
-            Log.d("Comments", "First time");
-            Intent intent = new Intent(MainActivity.this, IntroActivity.class);
-            startActivity(intent);
-            settings.edit().putBoolean("my_first_time", false).apply();
-        }
-
-
-        //Change Default Font
-        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("BYekan.ttf")
-                .setFontAttrId(R.attr.fontPath)
-                .build()
-        );
+//        final String PREFS_NAME = "MyPrefsFile";
+//
+//        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+//
+//        if (settings.getBoolean("my_first_time", true)) {
+//            Log.d("Comments", "First time");
+//            Intent intent = new Intent(MainActivity.this, IntroActivity.class);
+//            startActivity(intent);
+//            settings.edit().putBoolean("my_first_time", false).apply();
+//        }
+//
+//
+//        //Change Default Font
+//        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+//                .setDefaultFontPath("BYekan.ttf")
+//                .setFontAttrId(R.attr.fontPath)
+//                .build()
+//        );
 
         //Set Manually Title of Action Bar
         getSupportActionBar().setTitle("معرفی رشته‌های شاخه فنی‌حرفه‌ای");
@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
 
         new GetJSON().execute();
 
-        changeFragment(5);
+        changeFragment(1);
     }
 
     /**

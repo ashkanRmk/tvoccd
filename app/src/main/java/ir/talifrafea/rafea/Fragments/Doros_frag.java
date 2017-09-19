@@ -68,7 +68,7 @@ public class Doros_frag extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("دروس مشترک فنی‌حرفه‌ای   ");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("دروس مشترک فنی‌حرفه‌ای                ");
 
         final RecyclerView recList = (RecyclerView) view.findViewById(R.id.cardList);
         recList.setHasFixedSize(true);

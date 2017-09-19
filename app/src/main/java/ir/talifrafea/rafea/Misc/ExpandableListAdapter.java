@@ -1,6 +1,7 @@
 package ir.talifrafea.rafea.Misc;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,11 +24,19 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     // child data in format of header title, child title
     private HashMap<String, List<String>> _listDataChild;
 
+    private String _headerColor;
+    private String _childColor;
+    private String _childBackgroundColor;
+
     public ExpandableListAdapter(Context context, List<String> listDataHeader,
-                                 HashMap<String, List<String>> listChildData) {
+                                 HashMap<String, List<String>> listChildData,
+                                 String headerColor, String childColor, String childBackgroundColor) {
         this._context = context;
         this._listDataHeader = listDataHeader;
         this._listDataChild = listChildData;
+        this._headerColor = headerColor;
+        this._childColor = childColor;
+        this._childBackgroundColor = childBackgroundColor;
     }
 
     @Override
@@ -51,12 +60,19 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             LayoutInflater infalInflater = (LayoutInflater) this._context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = infalInflater.inflate(R.layout.list_exp_item, null);
+            convertView.setBackgroundColor(Color.parseColor(_childBackgroundColor));
         }
-
+        else {
+            convertView.setBackgroundColor(Color.parseColor(_childBackgroundColor));
+        }
         TextView txtListChild = (TextView) convertView
                 .findViewById(R.id.lblListItem);
 
         txtListChild.setText(childText);
+
+        txtListChild.setTextColor(Color.parseColor(_childColor));
+        txtListChild.setBackgroundColor(Color.parseColor(_childBackgroundColor));
+
         return convertView;
     }
 
@@ -95,6 +111,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 .findViewById(R.id.lblListHeader);
         lblListHeader.setTypeface(null, Typeface.BOLD);
         lblListHeader.setText(headerTitle);
+
+        lblListHeader.setTextColor(Color.parseColor(_headerColor));
 
         return convertView;
     }

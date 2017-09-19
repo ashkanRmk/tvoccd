@@ -81,7 +81,7 @@ public class Khadamat_Khadamat extends Fragment {
         // preparing list data
         prepareListData();
 
-        listAdapter = new ExpandableListAdapter(view.getContext(), listDataHeader, listDataChild);
+        listAdapter = new ExpandableListAdapter(view.getContext(), listDataHeader, listDataChild,"#FFFFFF", "#FFFFFF", "#00d797");
 
         // setting list adapter
         expListView.setAdapter(listAdapter);

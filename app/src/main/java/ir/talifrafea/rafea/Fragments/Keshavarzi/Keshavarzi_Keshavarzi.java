@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.SimpleExpandableListAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
@@ -80,7 +82,8 @@ public class Keshavarzi_Keshavarzi extends Fragment {
         // preparing list data
         prepareListData();
 
-        listAdapter = new ExpandableListAdapter(view.getContext(), listDataHeader, listDataChild);
+
+        listAdapter = new ExpandableListAdapter(view.getContext(), listDataHeader, listDataChild, "#FFFFFF", "#FFFFFF", "#02b30b");
 
         // setting list adapter
         expListView.setAdapter(listAdapter);

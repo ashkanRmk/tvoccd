@@ -2,6 +2,7 @@ package ir.talifrafea.rafea.Fragments.Honar;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
@@ -69,9 +71,16 @@ public class Honar_Honar extends Fragment {
     List<String> listDataHeader;
     HashMap<String, List<String>> listDataChild;
 
+    TextView tchild;
+    TextView tparent;
+
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        tchild = (TextView) view.findViewById(R.id.lblListItem);
+        tparent = (TextView) view.findViewById(R.id.lblListHeader);
+
 
         // get the listview
         expListView = (ExpandableListView) view.findViewById(R.id.lvExp);
@@ -79,7 +88,8 @@ public class Honar_Honar extends Fragment {
         // preparing list data
         prepareListData();
 
-        listAdapter = new ExpandableListAdapter(view.getContext(), listDataHeader, listDataChild);
+        //headerColor - childColor - childBackgroundColor
+        listAdapter = new ExpandableListAdapter(view.getContext(), listDataHeader, listDataChild, "#FFFFFF", "#FFFFFF", "#4527a0");
 
         // setting list adapter
         expListView.setAdapter(listAdapter);

@@ -79,7 +79,7 @@ public class Barq_Sanat extends Fragment {
         // preparing list data
         prepareListData();
 
-        listAdapter = new ExpandableListAdapter(view.getContext(), listDataHeader, listDataChild);
+        listAdapter = new ExpandableListAdapter(view.getContext(), listDataHeader, listDataChild,"#FFFFFF", "#FFFFFF", "#d1692d");
 
         // setting list adapter
         expListView.setAdapter(listAdapter);
@@ -93,7 +93,7 @@ public class Barq_Sanat extends Fragment {
                 //Some works for NarmAfzar Films
                 final MainActivity activity = (MainActivity) getActivity();
 
-                if (groupPosition == 3 && childPosition == 4)
+                if (groupPosition == 3 && childPosition == 6)
                 {
                     activity.getFilmFragment();
                     return true;

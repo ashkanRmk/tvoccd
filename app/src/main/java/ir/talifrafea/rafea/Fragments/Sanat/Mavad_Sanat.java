@@ -80,7 +80,7 @@ public class Mavad_Sanat extends Fragment {
         // preparing list data
         prepareListData();
 
-        listAdapter = new ExpandableListAdapter(view.getContext(), listDataHeader, listDataChild);
+        listAdapter = new ExpandableListAdapter(view.getContext(), listDataHeader, listDataChild,"#FFFFFF", "#FFFFFF", "#d1692d");
 
         // setting list adapter
         expListView.setAdapter(listAdapter);

@@ -70,7 +70,7 @@ public class Narm_Films extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("فیلم‌های رشته رایانه");
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("فیلم‌های رشته شبکه و نرم‌افزار رایانه");
 
         final RecyclerView recList = (RecyclerView) view.findViewById(R.id.cardList);
         recList.setHasFixedSize(true);
@@ -87,7 +87,7 @@ public class Narm_Films extends Fragment {
                 final int position = recList.getChildLayoutPosition(view);
                 final MainActivity activity = (MainActivity) getActivity();
 
-                String name = activity.BarqParents.get(3).getMyChilds().get(4).getMyItems().get(position).getTitle();
+                String name = activity.BarqParents.get(3).getMyChilds().get(6).getMyItems().get(position).getTitle();
                 final NiftyDialogBuilder dialogBuilder = NiftyDialogBuilder.getInstance(view.getContext());
 
                 dialogBuilder
@@ -102,7 +102,7 @@ public class Narm_Films extends Fragment {
                             @Override
                             public void onClick(View v) {
                                 Toast.makeText(v.getContext(), "دانلود فایل آغاز شد!", Toast.LENGTH_SHORT).show();
-                                String url = activity.BarqParents.get(3).getMyChilds().get(4).getMyItems().get(position).getUrl();
+                                String url = activity.BarqParents.get(3).getMyChilds().get(6).getMyItems().get(position).getUrl();
 
                                 if (!url.startsWith("http://") && !url.startsWith("https://"))
                                     url = "http://" + url;
@@ -182,7 +182,7 @@ public class Narm_Films extends Fragment {
     private List<String> getListData() {
         List<String> list = new LinkedList<>();
         final MainActivity activity = (MainActivity) getActivity();
-        List<Item_Model> item_model = activity.BarqParents.get(3).getMyChilds().get(4).getMyItems();
+        List<Item_Model> item_model = activity.BarqParents.get(3).getMyChilds().get(6).getMyItems();
 
         for (Item_Model itemModel : item_model) {
             list.add(itemModel.getTitle());
