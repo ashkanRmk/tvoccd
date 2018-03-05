@@ -66,7 +66,7 @@ public class Keshavarzi_frag extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("زمینه کشاورزی");
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("      زمینه کشاورزی");
 
 
         FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(

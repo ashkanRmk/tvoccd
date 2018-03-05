@@ -10,13 +10,6 @@ public class Parent_Model {
         this.parentTitle = parentTitle;
     }
 
-/*
-    public void setMyChild(String childTitle){
-        Child_Model myChild = new Child_Model(childTitle);
-        myChilds.add(myChild);
-    }
-*/
-
     public void setMyChilds(List<Child_Model> myChild) {
         myChilds = myChild;
     }

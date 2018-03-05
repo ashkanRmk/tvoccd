@@ -65,7 +65,7 @@ public class Sanat_frag extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("زمینه صنعت                       ");
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("       زمینه صنعت                       ");
 
 
         FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(

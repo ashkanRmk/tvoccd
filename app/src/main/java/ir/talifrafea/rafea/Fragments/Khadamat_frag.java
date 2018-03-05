@@ -68,7 +68,7 @@ public class Khadamat_frag extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("زمینه خدمات");
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("      زمینه خدمات");
 
 
         FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(

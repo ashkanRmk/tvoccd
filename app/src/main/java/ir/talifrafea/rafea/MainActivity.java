@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,10 +20,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.orhanobut.hawk.Hawk;
+import com.orhanobut.hawk.HawkBuilder;
+import com.orhanobut.hawk.LogLevel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,10 +38,13 @@ import org.json.JSONObject;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.crypto.EncryptedPrivateKeyInfo;
+
 import ir.talifrafea.rafea.Fragments.Doros_frag;
 import ir.talifrafea.rafea.Fragments.Honar_frag;
 import ir.talifrafea.rafea.Fragments.Keshavarzi_frag;
 import ir.talifrafea.rafea.Fragments.Khadamat_frag;
+import ir.talifrafea.rafea.Fragments.Sanat.Films.SeasonFilms;
 import ir.talifrafea.rafea.Fragments.Sanat.Memari_Sanat;
 import ir.talifrafea.rafea.Fragments.Sanat.Narm_Films;
 import ir.talifrafea.rafea.Fragments.Sanat_frag;
@@ -42,8 +53,13 @@ import ir.talifrafea.rafea.Misc.BottomNavigationViewHelper;
 import ir.talifrafea.rafea.Misc.HttpHandler;
 import ir.talifrafea.rafea.Misc.RtlizeEverything;
 import ir.talifrafea.rafea.Models.Child_Model;
+import ir.talifrafea.rafea.Models.Film_models.Film_Seasons;
+import ir.talifrafea.rafea.Models.Film_models.Film_SoftName;
+import ir.talifrafea.rafea.Models.Film_models.Film_main;
 import ir.talifrafea.rafea.Models.Item_Model;
+import ir.talifrafea.rafea.Models.Middle_CHild;
 import ir.talifrafea.rafea.Models.Parent_Model;
+import ir.talifrafea.rafea.Models.Season_Modal;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -75,6 +91,39 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.resume) {
+            String url = "https://goo.gl/forms/iUdXLphe9BWErEHI3";
+            try {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(browserIntent);
+            } catch (Exception e) {
+                Toast.makeText(getApplicationContext(), "No application can handle this request."
+                        + " Please install a web browser",  Toast.LENGTH_LONG).show();
+                e.printStackTrace();
+            }
+            return true;
+        }
+        if (id == R.id.exit) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
+
     private String TAG = MainActivity.class.getSimpleName();
 
     private ProgressDialog pDialog;
@@ -94,7 +143,10 @@ public class MainActivity extends AppCompatActivity {
 
     public List<Item_Model> DorosParents = new LinkedList<>();
 
+    public List<Film_main> filmsList = new LinkedList<>();
 
+    public int mainPos;
+    public int seasonPos;
 
     //Change Default Font
     @Override
@@ -107,28 +159,28 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        final String PREFS_NAME = "MyPrefsFile";
 
-//        final String PREFS_NAME = "MyPrefsFile";
-//
-//        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-//
-//        if (settings.getBoolean("my_first_time", true)) {
-//            Log.d("Comments", "First time");
-//            Intent intent = new Intent(MainActivity.this, IntroActivity.class);
-//            startActivity(intent);
-//            settings.edit().putBoolean("my_first_time", false).apply();
-//        }
-//
-//
-//        //Change Default Font
-//        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-//                .setDefaultFontPath("BYekan.ttf")
-//                .setFontAttrId(R.attr.fontPath)
-//                .build()
-//        );
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+
+        if (settings.getBoolean("my_first_time", true)) {
+            Log.d("Comments", "First time");
+            Intent intent = new Intent(MainActivity.this, IntroActivity.class);
+            startActivity(intent);
+            settings.edit().putBoolean("my_first_time", false).commit();
+        }
+
+
+
+        Hawk.init(getApplicationContext())
+                .setEncryptionMethod(HawkBuilder.EncryptionMethod.NO_ENCRYPTION)
+                .setStorage(HawkBuilder.newSharedPrefStorage(getApplicationContext()))
+                .setLogLevel(LogLevel.NONE)
+                .build();
+
 
         //Set Manually Title of Action Bar
-        getSupportActionBar().setTitle("معرفی رشته‌های شاخه فنی‌حرفه‌ای");
+        getSupportActionBar().setTitle("     معرفی رشته‌های شاخه فنی‌حرفه‌ای");
 
         //getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL); //API +17
 
@@ -185,21 +237,77 @@ public class MainActivity extends AppCompatActivity {
         protected Void doInBackground(Void... arg0) {
             HttpHandler sh = new HttpHandler();
 
-            // Making a request to url and getting response
-            String url1 = "http://tvoccd.ir/JSON_files/sanat.json";
-            String jsonStr = sh.makeServiceCall(url1);
-            String url_doros = "http://tvoccd.ir/JSON_files/doros.json";
-            String jsonStr_doros = sh.makeServiceCall(url_doros);
-            String url_honar_kesh = "http://tvoccd.ir/JSON_files/honar_keshavarzi.json";
-            String jsonStr_honar = sh.makeServiceCall(url_honar_kesh);
-            String url_khadam = "http://tvoccd.ir/JSON_files/khadamat.json";
-            String jsonStr_khadam = sh.makeServiceCall(url_khadam);
+            String jsonStr;
+            String jsonStr_doros;
+            String jsonStr_honar;
+            String jsonStr_khadam;
+            String jsonStr_Films;
+
+            if (!isNetworkConnected() && Hawk.count() > 2)
+            {
+                jsonStr = Hawk.get("sanat");
+                jsonStr_doros = Hawk.get("doros");
+                jsonStr_honar = Hawk.get("honar");
+                jsonStr_khadam = Hawk.get("khadamat");
+                jsonStr_Films = Hawk.get("films");
+            }
+            else {
+                // Making a request to url and getting response
+                String url1 = "http://tvoccd.ir/JSON_files/sanat.json";
+                jsonStr = sh.makeServiceCall(url1);
+                String url_doros = "http://tvoccd.ir/JSON_files/doros.json";
+                jsonStr_doros = sh.makeServiceCall(url_doros);
+                String url_honar_kesh = "http://tvoccd.ir/JSON_files/honar_keshavarzi.json";
+                jsonStr_honar = sh.makeServiceCall(url_honar_kesh);
+                String url_khadam = "http://tvoccd.ir/JSON_files/khadamat.json";
+                jsonStr_khadam = sh.makeServiceCall(url_khadam);
+                String url_Films = "http://tvoccd.ir/JSON_files/Films.json";
+                jsonStr_Films = sh.makeServiceCall(url_Films);
+
+                Hawk.put("sanat", jsonStr);
+                Hawk.put("doros", jsonStr_doros);
+                Hawk.put("honar", jsonStr_honar);
+                Hawk.put("khadamat", jsonStr_khadam);
+                Hawk.put("films", jsonStr_Films);
+            }
 
             Log.e(TAG, "Response from url: " + jsonStr);
 
             if (jsonStr != null && jsonStr_doros != null && jsonStr_honar != null &&
             jsonStr_khadam != null) {
                 try {
+
+                    //JSON Parsing for Films Section
+                    JSONObject jsonObj_films = new JSONObject(jsonStr_Films);
+                    JSONArray films = jsonObj_films.getJSONArray("films");
+                    for (int i = 0; i < films.length(); i++)
+                    {
+                        JSONObject mainFilm = films.getJSONObject(i);
+                        String mainFilmName = mainFilm.getString("file");
+                        filmsList.add(new Film_main(mainFilmName));
+
+                        JSONArray seasons = mainFilm.getJSONArray("adr");
+                        List<Film_Seasons> filmSeasons = new LinkedList<>();
+                        for (int j = 0; j < seasons.length(); j++)
+                        {
+                            JSONObject seasonGroup = seasons.getJSONObject(j);
+                            String SeasonName = seasonGroup.getString("season_group");
+                            filmSeasons.add(new Film_Seasons(SeasonName));
+
+                            JSONArray softFilms = seasonGroup.getJSONArray("season_child");
+                            List<Film_SoftName> softNameList = new LinkedList<>();
+                            for (int k = 0; k < softFilms.length(); k++)
+                            {
+                                JSONObject softName = softFilms.getJSONObject(k);
+                                String Title = softName.getString("file");
+                                String Url = softName.getString("adr");
+                                softNameList.add(new Film_SoftName(Title, Url));
+                            }
+                            filmSeasons.get(j).setSoftNames(softNameList);
+                        }
+                        filmsList.get(i).set_seasons(filmSeasons);
+                    }
+
 
                     JSONObject jsonObj_khadam = new JSONObject(jsonStr_khadam);
                     JSONArray khadam = jsonObj_khadam.getJSONArray("khadamat");
@@ -416,22 +524,63 @@ public class MainActivity extends AppCompatActivity {
                                     BarqParents.add(parentModel);
                                     List<Child_Model> childModels = new LinkedList<>();
 
+                                    boolean ch = false;
+
                                     for (int j = 0; j < child.length(); j++) {
+                                        ch = false;
+
                                         JSONObject childItem = child.getJSONObject(j);
 
                                         String childName = childItem.getString("title");
+                                        if (childName == "فیلم‌های رشته")
+                                            ch = true;
+
                                         childModels.add(new Child_Model(childName));
 
                                         List<Item_Model> itemModels = new LinkedList<>();
+                                        List<Middle_CHild> middle_cHilds = new LinkedList<>();
                                         JSONArray urls = childItem.getJSONArray("url");
                                         for (int k = 0; k < urls.length(); k++) {
                                             JSONObject url = urls.getJSONObject(k);
 
                                             String fileTitle = url.getString("file");
-                                            String adr = url.getString("adr");
-                                            itemModels.add(new Item_Model(fileTitle, adr));
+////////////////
+                                            if (ch) {
+                                                middle_cHilds.add(new Middle_CHild(fileTitle));
+
+                                                List<Season_Modal> season_modals = new LinkedList<>();
+                                                JSONArray seasons = url.getJSONArray("adr");
+                                                for (int v = 0; v < seasons.length(); v++) {
+                                                    JSONObject seasonObj = seasons.getJSONObject(v);
+
+                                                    String season_group = seasonObj.getString("season_group");
+                                                    itemModels.add(new Item_Model(season_group));
+
+                                                    JSONArray child_Season = seasonObj.getJSONArray("season_child");
+                                                    for (int l = 0; l < child_Season.length(); l++) {
+                                                        JSONObject seas_child = child_Season.getJSONObject(l);
+
+                                                        String filename = seas_child.getString("file");
+                                                        String fileadr = seas_child.getString("adr");
+
+                                                        season_modals.add(new Season_Modal(filename, fileadr));
+                                                    }
+                                                    itemModels.get(v).setMySeasons(season_modals);
+                                                }
+                                                middle_cHilds.get(k).setMyItems(itemModels);
+                                            }
+                                            else {
+                                                String adr = url.getString("adr");
+                                                itemModels.add(new Item_Model(fileTitle, adr));
+                                            }
                                         }
-                                        childModels.get(j).setMyItems(itemModels);
+                                        if (ch)
+                                        {
+                                            childModels.get(j).setMiddle_cHildList(middle_cHilds);
+                                        }
+                                        else {
+                                            childModels.get(j).setMyItems(itemModels);
+                                        }
                                     }
                                     parentModel.setMyChilds(childModels);
                                 }
@@ -634,7 +783,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
+/*
     boolean doubleBackToExitPressedOnce = false;
     @Override
     public void onBackPressed() {
@@ -651,6 +800,14 @@ public class MainActivity extends AppCompatActivity {
                 doubleBackToExitPressedOnce = false;
             }
         }, 2000);
+    }
+*/
+
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        return cm.getActiveNetworkInfo() != null;
     }
 
     private void changeFragment(int position) {
@@ -692,5 +849,14 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
     }
 
+    public void getSeasonFragment() {
+        Fragment newFragment = new SeasonFilms();
 
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        transaction.replace(R.id.fragmentContainer, newFragment, "NewFragmentTag");
+        transaction.addToBackStack(null);
+
+        transaction.commit();
+    }
 }

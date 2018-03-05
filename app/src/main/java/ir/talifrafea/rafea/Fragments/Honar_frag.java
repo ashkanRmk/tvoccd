@@ -64,7 +64,7 @@ public class Honar_frag extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("زمینه هنر");
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("      زمینه هنر");
 
 
         FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(

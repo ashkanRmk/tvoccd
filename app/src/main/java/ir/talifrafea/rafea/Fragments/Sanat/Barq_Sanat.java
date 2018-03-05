@@ -93,7 +93,7 @@ public class Barq_Sanat extends Fragment {
                 //Some works for NarmAfzar Films
                 final MainActivity activity = (MainActivity) getActivity();
 
-                if (groupPosition == 3 && childPosition == 6)
+                if (groupPosition == 3 && childPosition == 7)
                 {
                     activity.getFilmFragment();
                     return true;

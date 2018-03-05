@@ -12,6 +12,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +26,9 @@ import java.util.List;
 
 import ir.talifrafea.rafea.MainActivity;
 import ir.talifrafea.rafea.Misc.Adapter_Films;
+import ir.talifrafea.rafea.Models.Film_models.Film_main;
 import ir.talifrafea.rafea.Models.Item_Model;
+import ir.talifrafea.rafea.Models.Middle_CHild;
 import ir.talifrafea.rafea.R;
 public class Narm_Films extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -70,7 +73,7 @@ public class Narm_Films extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("فیلم‌های رشته شبکه و نرم‌افزار رایانه");
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("فیلم‌های رشته شبکه و نرم‌افزار رایانه       ");
 
         final RecyclerView recList = (RecyclerView) view.findViewById(R.id.cardList);
         recList.setHasFixedSize(true);
@@ -84,49 +87,10 @@ public class Narm_Films extends Fragment {
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                final int position = recList.getChildLayoutPosition(view);
                 final MainActivity activity = (MainActivity) getActivity();
+                activity.mainPos = recList.getChildLayoutPosition(view);
 
-                String name = activity.BarqParents.get(3).getMyChilds().get(6).getMyItems().get(position).getTitle();
-                final NiftyDialogBuilder dialogBuilder = NiftyDialogBuilder.getInstance(view.getContext());
-
-                dialogBuilder
-                        .withTitle("دریافت فیلم آموزشی")
-                        .withMessage("نام فایل: " + name)
-                        .withButton1Text("شروع دانلود")
-                        .withButton2Text("لغو")
-                        .withMessageColor("#FFFFFFFF")
-                        .withDialogColor("#FF459969")
-                        .isCancelableOnTouchOutside(true)
-                        .setButton1Click(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Toast.makeText(v.getContext(), "دانلود فایل آغاز شد!", Toast.LENGTH_SHORT).show();
-                                String url = activity.BarqParents.get(3).getMyChilds().get(6).getMyItems().get(position).getUrl();
-
-                                if (!url.startsWith("http://") && !url.startsWith("https://"))
-                                    url = "http://" + url;
-
-                                try {
-                                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                                    startActivity(browserIntent);
-                                } catch (Exception e) {
-                                    Toast.makeText(view.getContext(), "No application can handle this request."
-                                            + " Please install a web browser",  Toast.LENGTH_LONG).show();
-                                    e.printStackTrace();
-                                }
-
-                                dialogBuilder.dismiss();
-                            }
-                        })
-                        .setButton2Click(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Toast.makeText(v.getContext(), "عملیات لغو شد!", Toast.LENGTH_SHORT).show();
-                                dialogBuilder.dismiss();
-                            }
-                        })
-                        .show();
+                activity.getSeasonFragment();
 
             }
         };
@@ -182,10 +146,15 @@ public class Narm_Films extends Fragment {
     private List<String> getListData() {
         List<String> list = new LinkedList<>();
         final MainActivity activity = (MainActivity) getActivity();
-        List<Item_Model> item_model = activity.BarqParents.get(3).getMyChilds().get(6).getMyItems();
 
-        for (Item_Model itemModel : item_model) {
-            list.add(itemModel.getTitle());
+        List<Film_main> filmMainList = activity.filmsList;
+
+        for (Film_main item : filmMainList) {
+            list.add(item.getMain_name());
+        }
+
+        for (String s : list) {
+            Log.d( "getListData: ", s);
         }
 
         return list;
